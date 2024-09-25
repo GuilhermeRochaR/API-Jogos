@@ -1,0 +1,71 @@
+from flask import Flask, jsonify, request
+
+app = Flask(__name__)
+
+jogos = [
+    {
+        "id": 1,
+        "nome": "Max Payne 3",
+        "ano": "2013"
+    },
+    {
+        "id": 2,
+        "nome": "Mad Max",
+        "ano": "2016"
+    },
+    {
+        "id": 3,
+        "nome": "Mullet Madjack",
+        "ano": "2024"
+    }
+]
+
+#GET
+@app.route('/jogos',methods=['GET'])
+def obter_jogos():
+    return jsonify(jogos)
+
+#GET_ONE
+@app.route('/jogos/<int:id>',methods=['GET'])
+def obter_jogos_id(id):
+    for jogo in jogos:
+        if jogo.get('id') == id:
+            return jsonify(jogo)
+
+#POST
+@app.route('/jogos',methods=['POST'])
+def incluir_novo_jogo():
+    novo_jogo = request.get_json()
+    jogos.append(novo_jogo)
+
+    return jsonify(jogos)
+
+#PUT
+@app.route('/jogos/<int:id>',methods=['PUT'])
+def alterar_jogo(id): #Define uma função chamada "alterar_jogo" que recebe um parâmetro id. Esse ID vai identificar qual jogo será editado.
+
+    jogo_alterado = request.get_json() #"request.get_json()" captura os dados JSON enviados na requisição HTTP. Esses dados contêm as informações atualizadas do jogo. E esses dados são armazenados na variável "jogo_alterado".
+
+    for indice,jogo in enumerate(jogos): #Esse laço percorre uma lista chamada "jogos". "enumerate" também retorna o índice de cada item, além do próprio item (nesse caso, o jogo).
+
+        if jogo.get('id') == id: #Verifica se o ID do jogo atual corresponde ao ID passado como argumento na função. O ".get('id')" acessa o valor do campo 'id' de cada jogo.
+
+            jogos[indice].update(jogo_alterado) #Se o ID corresponder, a função atualiza as informações do livro na posição indice usando o método ".update()", que modifica o dicionário do jogo com os novos dados recebidos em jogo_alterado.
+
+            return jsonify(jogos[indice]) #Depois de atualizar o jogo, a função retorna os dados do jogo editado em formato JSON para o cliente (quem fez a requisição).
+
+#DELETE
+@app.route('/jogos/<int:id>',methods=['DELETE']) #Aqui você define a rota que será usada para se poder deletar um item, neste caso, após "/jogos/" é necessário inserir o "id" do item em questão.
+
+def deletar_jogo(id): #Aqui você define o nome da função e que ela irá utilizar o id do item para achá-lo.
+
+    for indice,jogo in enumerate(jogos): #Aqui você utilizará um laço "for" que irá fazer duas contagens, uma chamada "indice" e outra chamada "jogo". Essa contagem será feita numa enumeração da lista "jogos". Ou seja, os itens da lista "jogos" serão enumerados e 1 em diante, e a contagem será feita em cima dessa informação.
+
+        if jogo.get('id') == id: #Se o valor do "id" da contagem atual for igual ao que foi digitado lá na requisição, então o código seguirá o disposto abaixo.
+
+            del jogos[indice] #Haverá a deleção do item da lista "jogos", cujo "indice", for equivalente ao valor de "jogo".
+
+    return jsonify(jogos) #Aqui ele vai retornar o a lista de jogos agora sem mais o item que foi deletado.
+
+
+app.run(port=6000, host='localhost', debug=True)
