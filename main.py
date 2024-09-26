@@ -38,11 +38,9 @@ def get_by_year(ano_lancamento):
 def create_jogos():
     jogo = request.json
     Jogos.append(jogo) #O jogo cujos dados forem informados, será acrescentado ao final da lista Jogos, no arquivo bd
-    return make_response(
-        jsonify(
-            Mensagem='Jogo cadastrado com sucesso!',
-            Jogo=jogo
-        )
+    return jsonify(
+        Mensagem='Jogo cadastrado com sucesso!',
+        Jogo=jogo
     )
 
 #PUT
