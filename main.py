@@ -28,12 +28,10 @@ def get_by_year(ano_lancamento):
     for jogo in Jogos:
         if jogo.get('ano_lancamento') == ano_lancamento:
             by_year.append(jogo)
-    return make_response(
-        jsonify(
-            Mensagem = f'Os jogos lançados no ano de {ano_lancamento} são:',
-            Jogos = by_year
+    return jsonify(
+        Mensagem = f'Os jogos lançados no ano de {ano_lancamento} são:',
+        Jogos = by_year
         )
-    )
 
 #POST
 @app.route('/jogos', methods=['POST'])
