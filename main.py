@@ -17,6 +17,9 @@ def get_by_id(id):
     for jogo in Jogos:
         if jogo.get('id') == id:
             return jogo
+    return jsonify(
+        Mensagem='Não há jogo com este id.'
+    )
         
 #GET_BY_YEAR
 @app.route('/jogos/ano/<int:ano_lancamento>', methods=['GET'])
@@ -32,7 +35,6 @@ def get_by_year(ano_lancamento):
         )
     )
 
-
 #POST
 @app.route('/jogos', methods=['POST'])
 def create_jogos():
@@ -47,7 +49,17 @@ def create_jogos():
 #@app.route('/jogos/<int:id>', methods=['PUT'])
 
 #DELETE
-#@app.route('/jogos/<int:id>', methods=['DELETE'])
+@app.route('/jogos/<int:id>', methods=['DELETE'])
+def delete_by_id(id):
+    for indice, jogo in enumerate(Jogos):
+        if jogo.get('id') == id:
+            del Jogos[indice]
+            return jsonify(
+                Mensagem = 'O jogo foi excluído com sucesso.'
+            )
+    return jsonify(
+        Mensagem='Não há jogo com este id.'
+    )
 
 
 
