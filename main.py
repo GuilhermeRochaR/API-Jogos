@@ -1,15 +1,15 @@
 from flask import Flask, jsonify, request, make_response
 from bd import Jogos
 
-app = Flask(__name__) #O nome do módulo será assumido pelo nome do arquivo
+app = Flask(__name__)
 app.json.sort_keys = False
 
 #GET
-@app.route('/jogos', methods=['GET']) #O /jogos no método GET, irá
-def get_jogos(): #Nesta função
+@app.route('/jogos', methods=['GET'])
+def get_jogos():
     return jsonify(
         Mensagem= 'Lista de Jogos',
-        Dados=Jogos) #Retornar a lista de jogos lá do arquivo bd
+        Dados=Jogos)
 
 #GET_BY_ID
 @app.route('/jogos/<int:id>', methods=['GET'])
@@ -39,14 +39,20 @@ def get_by_year(ano_lancamento):
 @app.route('/jogos', methods=['POST'])
 def create_jogos():
     jogo = request.json
-    Jogos.append(jogo) #O jogo cujos dados forem informados, será acrescentado ao final da lista Jogos, no arquivo bd
+    Jogos.append(jogo)
     return jsonify(
         Mensagem='Jogo cadastrado com sucesso!',
         Jogo=jogo
     )
 
 #PUT
-#@app.route('/jogos/<int:id>', methods=['PUT'])
+@app.route('/jogos/<int:id>', methods=['PUT'])
+def update_jogos(id):
+    jogo_alterado = request.get_json()
+    for indice, jogo in enumerate(Jogos):
+        if jogo.get('id') == id:
+            Jogos[indice].update(jogo_alterado)
+            return jsonify(Jogos[indice])
 
 #DELETE
 @app.route('/jogos/<int:id>', methods=['DELETE'])
@@ -61,6 +67,4 @@ def delete_by_id(id):
         Mensagem='Não há jogo com este id.'
     )
 
-
-
-app.run() #Para iniciar a api, deixá-la disponível para ser acessada, usamos esse código
+app.run()
